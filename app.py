@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from Models.User import db, User
+from Models.models import db, User, Workout
 from agents import TextProcessor
 from dotenv import load_dotenv
 import json
@@ -15,6 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 @app.route('/')
@@ -88,9 +89,29 @@ def process_workout():
     text = request.form['input_workout']
     processor = TextProcessor()
     result = processor.workout_to_json(text)
+    result = json.loads(result)["exercises"]
+    print(result)
+    print(type(result))
 
-    if isinstance(result, dict):
+    if "error" in result:
+        flash('Error processing workout. Please try again.', category='error')
+        return redirect(url_for('dashboard'))
+    else:
+        for exercise in result:
+            new_workout = Workout(exercise_name=exercise["exercise_name"], 
+                                weight_kilograms=exercise["weight_kilograms"],
+                                repetitions=exercise["repetitions"], 
+                                sets=exercise["sets"], 
+                                distance_kilometers=exercise["distance_kilometers"],
+                                    duration_minutes=exercise["duration_minutes"], 
+                                    kilocalories_burned=exercise["kilocalories_burned"])
+            db.session.add(new_workout)
+            db.session.commit()
+        flash('Workout processed successfully!', category='success')
+        
+    if isinstance(result, (dict, list)):
         result = json.dumps(result)
+        print(type(result))
 
     suggestion = processor.suggest_workout(result)
 
