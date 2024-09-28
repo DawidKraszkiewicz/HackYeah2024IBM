@@ -17,9 +17,9 @@ body {
 
 /* Struktura kontenera */
 .container {
-    display: flex;
-    text-align: center;
-    justify-content: center;
+    display: flex;                 /* Umożliwia użycie flexbox */
+    flex-direction: column;       /* Ustawia kierunek na kolumnowy (jeden pod drugim) */
+    justify-content: center;      /* Wyśrodkowuje w pionie */
     align-items: center;
     height: 100%;
     width: 100%;

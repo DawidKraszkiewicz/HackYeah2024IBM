@@ -2,13 +2,11 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f9;
-  color: #333;
+  background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
 }
 
 header {
-  background-color: #28a745;
-  color: white;
+  background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
   padding: 1rem;
   text-align: center;
 }
@@ -119,4 +117,27 @@ footer a:hover {
   form {
       padding: 1rem;
   }
+}
+.title-link {
+  color: black; /* Kolor tekstu linku */
+  text-decoration: none; /* Usunięcie podkreślenia */
+}
+
+.title-link:hover {
+  color: #575757; /* Podkreślenie przy najechaniu */
+}
+#welcome {
+  background-color: white; /* Kolor tła sekcji */
+  border-radius: 5px; /* Zaokrąglone rogi */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Cień */
+  padding: 20px; /* Wewnętrzny odstęp */
+  margin: 20px 0; /* Zewnętrzny odstęp */
+  width: 80%; /* Szerokość sekcji */
+  text-align: center; /* Wyśrodkowanie tekstu */
+}
+
+/* Styl dla nagłówka */
+h2, p {
+  margin: 0; /* Usunięcie domyślnego marginesu */
+  padding: 10px 0; /* Odstępy wewnętrzne */
 }
