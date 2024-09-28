@@ -1,19 +1,26 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session
+from flask import Flask, render_template, redirect, url_for, request, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from Models.User import db, User
+from agents import TextProcessor
+from dotenv import load_dotenv
+import json
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'  # Use your DB connection string here
-app.config['SECRET_KEY'] = 'your_secret_key'  # For session management and CSRF protection
+app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET")  # For session management and CSRF protection
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-db.create_all(app=app)
-
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def index():
-    session["logged_in"] = False
+    session["logged_in"] = True
+    session["suggestion"] = None
     return redirect(url_for('home'))
 
 
@@ -50,9 +57,9 @@ def register():
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
         if user:
-            flash('Username already exists.', category='error')
+            flash('Email already exists.', category='error')
         else:
-            new_user = User(first_name=first_name, last_name=last_name, email=email, password_hash=generate_password_hash(password, method='sha256'))
+            new_user = User(first_name=first_name, last_name=last_name, email=email, password_hash=generate_password_hash(password, method='scrypt'))
             db.session.add(new_user)
             db.session.commit()
             flash('Account created successfully!', category='success')
@@ -69,12 +76,30 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-    if session['logged_in'] == False:
-        return redirect(url_for('login'))
-    return render_template("dashboard.html")
+    if "logged_in" not in session:
+        return redirect(url_for('home'))
+    return render_template("dashboard.html", suggestion = session["suggestion"])
+
+
+@app.route('/process_workout', methods=['POST'])
+def process_workout():
+    if "logged_in" not in session:
+        return redirect(url_for('home'))
+    text = request.form['input_workout']
+    processor = TextProcessor()
+    result = processor.workout_to_json(text)
+
+    if isinstance(result, dict):
+        result = json.dumps(result)
+
+    suggestion = processor.suggest_workout(result)
+
+    session["suggestion"] = suggestion
+    return redirect(url_for('dashboard'))
+
 
 @app.route('/history')
 def history():
-    if session['logged_in'] == False:
-        return redirect(url_for('login'))
-    return render_template('history.html')
+    if "logged_in" not in session:
+        return redirect(url_for('home'))
+    return render_template("history.html")
