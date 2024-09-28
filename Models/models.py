@@ -26,6 +26,7 @@ class Workout(db.Model):
     __tablename__ = 'workouts'
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     exercise_name = db.Column(db.String(150),  nullable=False)
     weight_kilograms = db.Column(db.Integer, nullable=True)
     repetitions = db.Column(db.Integer, nullable=True)

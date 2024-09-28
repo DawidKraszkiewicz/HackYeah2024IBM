@@ -130,7 +130,7 @@ def process_workout():
         result = json.dumps(result)
         print(type(result))
 
-    suggestion = trainer.suggest_workout()
+    suggestion = trainer.suggest_workout(session["user_id"])
 
     session["suggestion"] = suggestion
     return redirect(url_for('dashboard'))
@@ -141,6 +141,6 @@ def history():
     if not session.get("user_id", None):
         return redirect(url_for('home'))
     
-    workouts = Workout.query.all()
+    workouts = Workout.query.filter_by(user_id=session["user_id"]).all()
     
     return render_template("history.html", workouts=workouts)

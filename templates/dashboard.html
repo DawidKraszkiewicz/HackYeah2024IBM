@@ -23,6 +23,12 @@
     <h1>{{ mesg }}</h1>
 {% endfor %}
 <div class="content">
+    <section id="credentials">
+        <h2>Twoje dane</h2>
+        <p>Imię: {{ user.first_name }}</p>
+        <p>Nazwisko: {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>
+    </section>
     <section id="settings">
         <h2>Ustawienia</h2>
         <form method="post" action="update_settings">
