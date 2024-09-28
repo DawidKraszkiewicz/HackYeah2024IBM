@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from Models.models import db, User, Workout
-from agents import TextProcessor
+from agents import PersonalTrainer
 from dotenv import load_dotenv
 import json
 import os
@@ -21,6 +21,7 @@ with app.app_context():
 @app.route('/')
 def index():
     session["logged_in"] = True
+    session["user_id"] = None
     session["suggestion"] = None
     return redirect(url_for('home'))
 
@@ -39,6 +40,7 @@ def login():
         if user:
             if check_password_hash(user.password_hash, password):
                 session["logged_in"] = True
+                session["user_id"] = user.id
                 flash('Logged in successfully!', category='success')
                 return redirect(url_for('dashboard'))
             else:
@@ -52,10 +54,16 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        if password != confirm_password:
+            flash('Passwords do not match.', category='error')
+            return render_template('register.html')
+        
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
-        password = request.form['password']
+        
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email already exists.', category='error')
@@ -72,6 +80,7 @@ def register():
 @app.route('/logout')
 def logout():
     session["logged_in"] = False
+    session["user_id"] = None
     return redirect(url_for('home'))
 
 
@@ -79,7 +88,9 @@ def logout():
 def dashboard():
     if "logged_in" not in session:
         return redirect(url_for('home'))
-    return render_template("dashboard.html", suggestion = session["suggestion"])
+    user = User.query.filter_by(id=session["user_id"]).first()
+    return render_template("dashboard.html", suggestion = session["suggestion"],
+                            user=user)
 
 
 @app.route('/process_workout', methods=['POST'])
@@ -87,11 +98,10 @@ def process_workout():
     if "logged_in" not in session:
         return redirect(url_for('home'))
     text = request.form['input_workout']
-    processor = TextProcessor()
-    result = processor.workout_to_json(text)
+    trainer = PersonalTrainer()
+    result = trainer.workout_to_json(text)
     result = json.loads(result)["exercises"]
-    print(result)
-    print(type(result))
+    
 
     if "error" in result:
         flash('Error processing workout. Please try again.', category='error')
@@ -113,7 +123,7 @@ def process_workout():
         result = json.dumps(result)
         print(type(result))
 
-    suggestion = processor.suggest_workout(result)
+    suggestion = trainer.suggest_workout()
 
     session["suggestion"] = suggestion
     return redirect(url_for('dashboard'))
@@ -123,4 +133,7 @@ def process_workout():
 def history():
     if "logged_in" not in session:
         return redirect(url_for('home'))
-    return render_template("history.html")
+    
+    workouts = Workout.query.all()
+    
+    return render_template("history.html", workouts=workouts)

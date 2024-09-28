@@ -11,6 +11,10 @@ class User(db.Model):
     first_name = db.Column(db.String(150),  nullable=False)
     last_name = db.Column(db.String(150), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
+    weight_kilograms = db.Column(db.Integer, nullable=True)
+    height_centimeters = db.Column(db.Integer, nullable=True)
+    age = db.Column(db.Integer, nullable=True)
+    intensity = db.Column(db.String(50), nullable=True)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
