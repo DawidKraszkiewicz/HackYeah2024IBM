@@ -67,3 +67,4 @@ class TextProcessor:
         )
         result = completion.choices[0].message.content
         return result
+    
