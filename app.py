@@ -9,71 +9,45 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-@app.route('/rejestracja', methods=['GET'])
-def show_register():
+
+@app.route('/')
+def index():
+    return redirect(url_for('logowanie'))
+
+
+@app.route('/logowanie', methods=['GET', 'POST'])
+def logowanie():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user:
+            if check_password_hash(user.password, password):
+                flash('Logged in successfully!', category='success')
+                return redirect(url_for('dashboard'))
+            else:
+                flash('Incorrect password, try again.', category='error')
+        else:
+            flash('Username does not exist.', category='error')
+
+    return render_template('logowanie.html')
+
+
+@app.route('/rejestracja', methods=['GET', 'POST'])
+def rejestracja():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user:
+            flash('Username already exists.', category='error')
+        else:
+            new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
+            db.session.add(new_user)
+            db.session.commit()
+            flash('Account created successfully!', category='success')
+            return redirect(url_for('login'))
+
     return render_template('rejestracja.html')
 
-@app.route('/logowanie')
-def show_login():
-    return render_template('templates/logowanie.html')
-
-# ----- Actions -----
-# These routes handle the form submissions for registration and login
-
-@app.route('/register', methods=['POST'])
-def register():
-    username = request.form['username']
-    email = request.form['email']
-    password = request.form['password']
-    
-    # Check if the email is already registered
-    user = User.query.filter_by(email=email).first()
-    if user:
-        flash('Email address already exists.')
-        return redirect(url_for('show_register'))
-
-    # Hash the password and create a new user
-    hashed_password = generate_password_hash(password, method='sha256')
-    new_user = User(username=username, email=email, password_hash=hashed_password)
-    
-    # Add the user to the database
-    db.session.add(new_user)
-    db.session.commit()
-
-    flash('Registration successful! Please log in.')
-    return redirect(url_for('show_login'))
-
-@app.route('/login', methods=['POST'])
-def login():
-    email = request.form['email']
-    password = request.form['password']
-
-    # Fetch the user from the database by email
-    user = User.query.filter_by(email=email).first()
-
-    # Check if the user exists and if the password is correct
-    if user and check_password_hash(user.password_hash, password):
-        session['user_id'] = user.id  # Store user id in session
-        flash('Login successful!')
-        return redirect(url_for('dashboard'))  # Redirect to a protected page (e.g., dashboard)
-    else:
-        flash('Invalid email or password.')
-        return redirect(url_for('show_login'))
-
-# Protected route (example)
-@app.route('/dashboard')
-def dashboard():
-    if 'user_id' not in session:
-        return redirect(url_for('show_login'))
-    return "Welcome to your dashboard!"
-
-# Logout route
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    flash('You have been logged out.')
-    return redirect(url_for('show_login'))
-
-# Run the app
-if __name__ == '__main__':
-    app.run(debug=True)
