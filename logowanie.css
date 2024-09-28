@@ -17,8 +17,9 @@ body {
 
 /* Struktura kontenera */
 .container {
-    display: flex;
-    justify-content: center;
+    display: flex;                 /* Umożliwia użycie flexbox */
+    flex-direction: column;       /* Ustawia kierunek na kolumnowy (jeden pod drugim) */
+    justify-content: center;      /* Wyśrodkowuje w pionie */
     align-items: center;
     height: 100%;
     width: 100%;
@@ -78,7 +79,8 @@ textarea {
 .btn-primary {
     background-color: #28a745;
     color: white;
-    border: none;
+    border-style: solid;
+    border-color: white;
     padding: 12px;
     border-radius: 5px;
     cursor: pointer;
@@ -87,13 +89,17 @@ textarea {
 }
 
 .btn-primary:hover {
-    background-color: #218838;
+    background-color: white;
+    color: #28a745;
+    border-style: solid;
+    border-color: #28a745;
 }
 
 .btn-google {
     background-color: #db4437;
     color: white;
-    border: none;
+    border-style: solid;
+    border-color: white;
     padding: 12px;
     border-radius: 5px;
     cursor: pointer;
@@ -103,7 +109,32 @@ textarea {
 }
 
 .btn-google:hover {
-    background-color: #c53929;
+    background-color: white;
+    color:#db4437;
+    
+    border-style: solid;
+    border-color: #db4437;
+}
+
+.btn-facebook {
+    background-color: #1877F2;
+    color: white;
+    border-style: solid;
+    border-color: white;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.btn-facebook:hover {
+    background-color: white;
+    color:#1877F2;
+    
+    border-style: solid;
+    border-color: #1877F2;
 }
 
 /* Opcje logowania */
@@ -149,4 +180,22 @@ textarea {
 
 .register-options a:hover {
   text-decoration: underline;
+}
+
+/* Styl przycisku powrotu do strony głównej */
+.btn-back {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #218838;
+    color: white;
 }
