@@ -69,10 +69,12 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
-    if "logged_in" not in session:
-        return redirect(url_for('home'))
+    if session['logged_in'] == False:
+        return redirect(url_for('login'))
     return render_template("dashboard.html")
 
 @app.route('/history')
 def history():
+    if session['logged_in'] == False:
+        return redirect(url_for('login'))
     return render_template('history.html')
