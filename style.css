@@ -1,3 +1,5 @@
+/* Index Styling */
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -7,7 +9,7 @@ body {
 }
 
 header {
-  background-color: #28a745;
+  background-color: rgb(40, 167, 69);
   color: white;
   padding: 1rem;
   text-align: center;
@@ -47,14 +49,19 @@ nav ul li a:hover {
 form {
   max-width: 600px;
   margin: 0 auto;
-  background: #fff;
+  /* background: rgba(40, 167, 69, 0.4);  */
+  background: radial-gradient(rgba(40, 167, 69, 0.8), rgba(40, 167, 69, 0.4));
   padding: 2rem;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 2px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
 #formularz h2{
   text-align: center;
+}
+
+#uwagi{
+  border-radius: 10px;
 }
 
 form input[type="text"], 
@@ -102,11 +109,27 @@ footer a:hover {
   color: #fff;
 }
 
+/* History Styling */
+
 #historia{
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
 }
+
+#historia h2{
+  text-align: center;
+}
+
+th, td {
+  padding: 5px;
+}
+
+tr{
+  /* background: radial-gradient(rgba(40, 167, 69, 0.8), rgba(40, 167, 69, 0.4)); */
+}
+
+
 @media (max-width: 768px) {
   nav ul {
       flex-direction: column;
