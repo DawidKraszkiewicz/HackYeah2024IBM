@@ -1,4 +1,6 @@
 from openai import OpenAI
+from Models.models import Workout
+import json
 import os
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 
@@ -16,10 +18,12 @@ Return answer as a JSON format summary of the exercises in the workout structure
 -"duration_minutes" <number>
 -"kilocalories_burned" <number>
 
-
+Even when there is only 1 exercise, make sure to include an "exercises" field.
+Everything should be translated to english and lowercase.
+Make sure the exercise names are standarised.
 Calculate any missing values based on the source text.
 Do any necessary conversions to metric units.
-For kilocalories_burned, use the average kilocalories burned per minute / repetition / distance for a given exercise.
+For kilocalories_burned, use the average kilocalories burned per minute / repetition / distance depending on which data is available for a given exercise.
 In the output do not include any calculations, conversions or any text besides the result JSON.
 Do not infer any data based on previous training, strictly use only source text given below as input.
 
@@ -59,6 +63,9 @@ class TextProcessor:
         return completion.choices[0].message.content
     
     def suggest_workout(self, text):
+        workouts = Workout.query.all()
+        workouts = [workout.to_dict() for workout in workouts]
+        print(workouts)
         prompt = TRAINER_PROMPT + text
         completion = self.client.chat.completions.create(
             model="gpt-4o-mini",
