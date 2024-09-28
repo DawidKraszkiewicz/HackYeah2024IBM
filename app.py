@@ -10,9 +10,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 db.create_all(app=app)
 
+
 @app.route('/')
 def index():
-    return redirect(url_for('login'))
+    session["logged_in"] = False
+    return redirect(url_for('home'))
+
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -23,6 +30,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password_hash, password):
+                session["logged_in"] = True
                 flash('Logged in successfully!', category='success')
                 return redirect(url_for('dashboard'))
             else:
@@ -53,6 +61,14 @@ def register():
     return render_template('register.html')
 
 
+@app.route('/logout')
+def logout():
+    session["logged_in"] = False
+    return redirect(url_for('home'))
+
+
 @app.route('/dashboard')
 def dashboard():
+    if "logged_in" not in session:
+        return redirect(url_for('home'))
     return render_template("dashboard.html")
