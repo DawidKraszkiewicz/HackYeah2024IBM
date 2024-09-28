@@ -23,6 +23,18 @@
     <h1>{{ mesg }}</h1>
 {% endfor %}
 <div class="content">
+    <section id="settings">
+        <h2>Ustawienia</h2>
+        <form method="post" action="update_settings">
+            <label for="input_weight">Waga (kg):</label>
+            <input type="number" id="input_weight" name="input_weight" value="{{ user.weight_kilograms }}"><br><br>
+            <label for="input_height">Wzrost (cm):</label>
+            <input type="number" id="input_height" name="input_height" value="{{ user.height_centimeters }}"><br><br>
+            <label for="input_age">Wiek:</label>
+            <input type="number" id="input_age" name="input_age" value="{{ user.age }}"><br><br>
+            <label for="input_intensity">Intensywność treningu:</label>
+            <input type="text" id="input_intensity" name="input_intensity" value="Średnia"><br><br>
+    </section>
     <section id="formularz">
         <h2>Formularz Ćwiczeń</h2>
         <form method="post" action="process_workout">

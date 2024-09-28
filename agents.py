@@ -19,7 +19,7 @@ Return answer as a JSON format summary of the exercises in the workout structure
 -"kilocalories_burned" <number>
 
 Even when there is only 1 exercise, make sure to include an "exercises" field.
-Everything should be translated to english and lowercase.
+Exercise names should be translated to english and CamelCase.
 Make sure the exercise names are standarised.
 Calculate any missing values based on the source text.
 Do any necessary conversions to metric units.
@@ -46,7 +46,7 @@ Do not infer any data based on previous training, strictly use only source text 
 =====
 '''
 
-class TextProcessor:
+class PersonalTrainer:
     def __init__(self):
         self.client = OpenAI(
             api_key=OPENAI_KEY
@@ -62,11 +62,10 @@ class TextProcessor:
         )
         return completion.choices[0].message.content
     
-    def suggest_workout(self, text):
+    def suggest_workout(self):
         workouts = Workout.query.all()
-        workouts = [workout.to_dict() for workout in workouts]
-        print(workouts)
-        prompt = TRAINER_PROMPT + text
+        workouts = json.dumps([workout.to_dict() for workout in workouts])
+        prompt = TRAINER_PROMPT + workouts
         completion = self.client.chat.completions.create(
             model="gpt-4o-mini",
             temperature=0,
