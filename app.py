@@ -72,3 +72,7 @@ def dashboard():
     if "logged_in" not in session:
         return redirect(url_for('home'))
     return render_template("dashboard.html")
+
+@app.route('/history')
+def history():
+    return render_template('history.html')
