@@ -8,46 +8,51 @@ app.config['SECRET_KEY'] = 'your_secret_key'  # For session management and CSRF 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
-
+db.create_all(app=app)
 
 @app.route('/')
 def index():
-    return redirect(url_for('logowanie'))
+    return redirect(url_for('login'))
 
 
-@app.route('/logowanie', methods=['GET', 'POST'])
-def logowanie():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['email']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(email=email).first()
         if user:
-            if check_password_hash(user.password, password):
+            if check_password_hash(user.password_hash, password):
                 flash('Logged in successfully!', category='success')
                 return redirect(url_for('dashboard'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
-            flash('Username does not exist.', category='error')
+            flash('Email does not exist.', category='error')
 
-    return render_template('logowanie.html')
+    return render_template('login.html')
 
 
-@app.route('/rejestracja', methods=['GET', 'POST'])
-def rejestracja():
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
-        username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
         email = request.form['email']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(email=email).first()
         if user:
             flash('Username already exists.', category='error')
         else:
-            new_user = User(username=username, email=email, password=generate_password_hash(password, method='sha256'))
+            new_user = User(first_name=first_name, last_name=last_name, email=email, password_hash=generate_password_hash(password, method='sha256'))
             db.session.add(new_user)
             db.session.commit()
             flash('Account created successfully!', category='success')
             return redirect(url_for('login'))
 
-    return render_template('rejestracja.html')
+    return render_template('register.html')
 
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template("dashboard.html")

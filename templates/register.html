@@ -4,23 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejestracja - AI Plan Treningowy</title>
-    <link rel="stylesheet" href="logowanie.css">
+    <link rel="stylesheet" href="../static/login.css">
 </head>
 <body>
+    {% for mesg in get_flashed_messages() %}
+        <h1>{{ mesg }}</h1>
+    {% endfor %}
     <div class="container">
         <div class="register-card">
             <div class="logo">
                 <h1>AI Plan Treningowy</h1>
             </div>
             <h2>Zarejestruj się</h2>
-            <form id="register-form">
+            <form id="register-form" method="post">
                 <div class="input-group">
                     <label for="first-name">Imię</label>
-                    <input type="text" id="first-name" name="first-name" placeholder="Wpisz swoje imię" required>
+                    <input type="text" id="first_name" name="first_name" placeholder="Wpisz swoje imię" required>
                 </div>
                 <div class="input-group">
                     <label for="last-name">Nazwisko</label>
-                    <input type="text" id="last-name" name="last-name" placeholder="Wpisz swoje nazwisko" required>
+                    <input type="text" id="last_name" name="last_name" placeholder="Wpisz swoje nazwisko" required>
                 </div>
                 <div class="input-group">
                     <label for="email">Email</label>
@@ -37,7 +40,7 @@
                 <button type="submit" class="btn-primary">Zarejestruj się</button>
             </form>
             <div class="register-options">
-                <p>Masz już konto? <a href="hack.html">Zaloguj się</a></p>
+                <p>Masz już konto? Zaloguj się</p>
             </div>
         </div>
     </div>

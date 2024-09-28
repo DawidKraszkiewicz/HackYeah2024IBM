@@ -8,7 +8,8 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
+    first_name = db.Column(db.String(150), unique=True, nullable=False)
+    last_name = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -16,8 +17,3 @@ class User(db.Model):
     # Method to set password using hashing
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-
-    # Method to check password
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-

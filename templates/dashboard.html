@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Styl Życia - Ćwiczenia Fizyczne</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
 
@@ -19,7 +19,9 @@
         <li><a href="logowanie.html">Wyloguj się</a></li>
     </ul>
 </nav>
-
+{% for mesg in get_flashed_messages() %}
+    <h1>{{ mesg }}</h1>
+{% endfor %}
 <div class="content">
     <section id="formularz">
         <h2>Formularz Ćwiczeń</h2>
