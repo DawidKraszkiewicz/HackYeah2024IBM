@@ -19,21 +19,40 @@
         <li><a href="logout">Wyloguj się</a></li>
     </ul>
 </nav>
+<div class="login-message">
 {% for mesg in get_flashed_messages() %}
     <h1>{{ mesg }}</h1>
 {% endfor %}
+</div>
 <div class="content">
-    <section id="settings">
-        <h2>Ustawienia</h2>
-        <form method="post" action="update_settings">
-            <label for="input_weight">Waga (kg):</label>
-            <input type="number" id="input_weight" name="input_weight" value="{{ user.weight_kilograms }}"><br><br>
-            <label for="input_height">Wzrost (cm):</label>
-            <input type="number" id="input_height" name="input_height" value="{{ user.height_centimeters }}"><br><br>
-            <label for="input_age">Wiek:</label>
-            <input type="number" id="input_age" name="input_age" value="{{ user.age }}"><br><br>
-            <label for="input_intensity">Intensywność treningu:</label>
-            <input type="text" id="input_intensity" name="input_intensity" value="Średnia"><br><br>
+    <section id="form">
+        <h2>Dane użytkownika</h2>
+        <form class="form-grid">
+            <div class="form-item">
+              <label for="weight">Waga (kg):</label>
+              <input type="number" id="weight" name="weight" required>
+            </div>
+            <div class="form-item">
+              <label for="height">Wzrost (cm):</label>
+              <input type="number" id="height" name="height" required>
+            </div>
+            <div class="form-item">
+              <label for="age">Wiek (lata):</label>
+              <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-item">
+              <label for="intensity">Intensywność treningu:</label>
+              <select id="intensity" name="intensity" required>
+                <option value="low">Niska</option>
+                <option value="medium">Średnia</option>
+                <option value="high">Wysoka</option>
+              </select>
+            </div>
+            <div class="form-submit">
+              <button type="submit">Wyślij</button>
+            </div>
+          </form>
+         
     </section>
     <section id="formularz">
         <h2>Formularz Ćwiczeń</h2>
@@ -41,11 +60,13 @@
             <label for="input_workout">Napisz, co dzisiaj robiłeś:</label><br>
             <textarea id="input_workout" name="input_workout" rows="6" cols="50"></textarea><br><br>
             <input type="submit" value="Zapisz" name="zapisz">
-        </form>
-        {% if suggestion %}
-            <p>{{ suggestion }}</p>
-        {% endif %}
+        </form> 
     </section>
 
+    <div class="suggestion">
+        {% if suggestion %}
+        <p>{{ suggestion }}</p>
+    {% endif %}
+    </div>
 </body>
 </html>
