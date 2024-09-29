@@ -49,6 +49,11 @@ nav ul li a:hover {
   max-height: 100vh;
 }
 
+#credential{
+  width: 90%;
+  margin: 0 auto;
+}
+
 form {
   width: 70%;
   margin: 0 auto;
@@ -57,6 +62,13 @@ form {
   border-radius: 10px;
   box-shadow: 2px 1px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+#credentials{
+  background: rgba(255, 255, 255, 0.7);
+  width: 40%;
+  margin: 0 auto;
+  border-radius: 10px;
 }
 
 .form-grid {
@@ -84,11 +96,6 @@ form {
   text-align: center;
   margin-top: 10px;
 }
-
- /* {
-  text-align: center;
-  margin-top: 10px;
-} */
 
 button {
   padding: 10px 20px;
@@ -169,6 +176,28 @@ form input[type="submit"]:hover {
   text-align: center; /* Wyśrodkowanie tekstu */
 }
 
+/* Settings Styling */
+
+.content h2{
+  text-align: center;
+}
+
+.setts{
+  width: 50%;
+}
+
+.setts label{
+  width: 20%;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.setts .row{
+  display: flex;
+  justify-content: space-around;
+  gap: 0;
+}
+
 /* History Styling */
 
 #historia{
@@ -204,6 +233,7 @@ th, td {
 h2, p {
   margin: 0; /* Usunięcie domyślnego marginesu */
   padding: 10px 0; /* Odstępy wewnętrzne */
+  text-align: center;
 }
 
 @media (max-width: 768px) {

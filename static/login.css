@@ -14,8 +14,7 @@ body {
 
 /* Struktura kontenera */
 .container {    /* Ustawia kierunek na kolumnowy (jeden pod drugim) */
-    justify-content: center;      /* Wyśrodkowuje w pionie */
-    align-items: center;
+    
     height: 100%;
     width: 100%;
 }
@@ -26,8 +25,8 @@ body {
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
+    width: 40%;
+    margin: 0 auto 20px;
     text-align: center;
 }
 
@@ -73,6 +72,12 @@ input, select, textarea {
 textarea {
     height: 100px;
     resize: none;
+}
+
+.back{
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 /* Przyciski */
@@ -164,8 +169,8 @@ textarea {
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
+  width: 50%;
+  margin: 0 auto;
   text-align: center;
 }
 
@@ -185,8 +190,9 @@ textarea {
 
 /* Styl przycisku powrotu do strony głównej */
 .btn-back {
-    display: inline-block;
-    margin: 20px 0;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
     padding: 10px 20px;
     background-color: #28a745;
     color: white;
