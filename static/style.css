@@ -85,11 +85,6 @@ form {
   margin-top: 10px;
 }
 
- /* {
-  text-align: center;
-  margin-top: 10px;
-} */
-
 button {
   padding: 10px 20px;
   background-color: #4CAF50;
@@ -167,6 +162,28 @@ form input[type="submit"]:hover {
   margin: 20px 0; /* Zewnętrzny odstęp */
   width: 60%; /* Szerokość sekcji */
   text-align: center; /* Wyśrodkowanie tekstu */
+}
+
+/* Settings Styling */
+
+.content h2{
+  text-align: center;
+}
+
+.setts{
+  width: 50%;
+}
+
+.setts label{
+  width: 20%;
+  text-align: left;
+  margin-top: 10px;
+}
+
+.setts .row{
+  display: flex;
+  justify-content: space-around;
+  gap: 0;
 }
 
 /* History Styling */
