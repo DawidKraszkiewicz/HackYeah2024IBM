@@ -49,6 +49,11 @@ nav ul li a:hover {
   max-height: 100vh;
 }
 
+#credential{
+  width: 90%;
+  margin: 0 auto;
+}
+
 form {
   width: 70%;
   margin: 0 auto;
@@ -221,6 +226,7 @@ th, td {
 h2, p {
   margin: 0; /* Usunięcie domyślnego marginesu */
   padding: 10px 0; /* Odstępy wewnętrzne */
+  text-align: center;
 }
 
 @media (max-width: 768px) {

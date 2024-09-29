@@ -20,15 +20,19 @@
         <li><a href="logout">Wyloguj się</a></li>
     </ul>
 </nav>
+<div class="login-message">
 {% for mesg in get_flashed_messages() %}
     <h1>{{ mesg }}</h1>
 {% endfor %}
+</div>
 <div class="content">
     <section id="credentials">
         <h2>Twoje dane</h2>
-        <p>Imię: {{ user.first_name }}</p>
-        <p>Nazwisko: {{ user.last_name }}</p>
-        <p>Email: {{ user.email }}</p>
+        <div class="data">
+            <p>Imię: {{ user.first_name }}</p>
+            <p>Nazwisko: {{ user.last_name }}</p>
+            <p>Email: {{ user.email }}</p>
+        </div>
     </section>
     <section id="formularz">
         <h2>Formularz Ćwiczeń</h2>
@@ -37,9 +41,11 @@
             <textarea id="input_workout" name="input_workout" rows="6" cols="50"></textarea><br><br>
             <input type="submit" value="Zasugeruj trening" name="process_workout ">
         </form>
-        {% if suggestion %}
-            <p>{{ suggestion }}</p>
+        <p>
+        {% if suggestion %}<br>
+            {{ suggestion }}<br>
         {% endif %}
+        </p>
     </section>
 
 </body>
