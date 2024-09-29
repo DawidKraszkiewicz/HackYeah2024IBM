@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 with app.app_context():
-    db.drop_all()
+    #db.drop_all()
     db.create_all()
 
 @app.route('/')
@@ -91,10 +91,25 @@ def dashboard():
     if not session.get("user_id", None):
         return redirect(url_for('home'))
     user = User.query.filter_by(id=session["user_id"]).first()
-    print(user.age)
-    print(type(user.age))
     return render_template("dashboard.html", suggestion = session["suggestion"],
                             user=user)
+
+
+@app.route('/save_config', methods=['POST'])
+def save_config():
+    if not session.get("user_id", None):
+        return redirect(url_for('home'))
+    try:
+        user = User.query.filter_by(id=session["user_id"]).first()
+    except Exception as e:
+        flash('Error updating user configuration: {}'.format(str(e)), category='error')
+        return redirect(url_for('dashboard'))
+    user.age = request.form['input_age']
+    user.weight_kilograms = request.form['input_weight']
+    user.height_centimeters = request.form['input_height']
+    db.session.commit()
+    flash('User configuration updated successfully!', category='success')
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/process_workout', methods=['POST'])
@@ -115,20 +130,20 @@ def process_workout():
         return redirect(url_for('dashboard'))
     else:
         for exercise in result:
-            new_workout = Workout(exercise_name=exercise["exercise_name"], 
+            new_workout = Workout(user_id=session["user_id"],
+                                exercise_name=exercise["exercise_name"], 
                                 weight_kilograms=exercise["weight_kilograms"],
                                 repetitions=exercise["repetitions"], 
                                 sets=exercise["sets"], 
                                 distance_kilometers=exercise["distance_kilometers"],
-                                    duration_minutes=exercise["duration_minutes"], 
-                                    kilocalories_burned=exercise["kilocalories_burned"])
+                                duration_minutes=exercise["duration_minutes"], 
+                                kilocalories_burned=exercise["kilocalories_burned"])
             db.session.add(new_workout)
             db.session.commit()
         flash('Workout processed successfully!', category='success')
         
     if isinstance(result, (dict, list)):
         result = json.dumps(result)
-        print(type(result))
 
     suggestion = trainer.suggest_workout(session["user_id"])
 
@@ -144,3 +159,11 @@ def history():
     workouts = Workout.query.filter_by(user_id=session["user_id"]).all()
     
     return render_template("history.html", workouts=workouts)
+
+
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if not session.get("user_id", None):
+        return redirect(url_for('home'))
+    user = User.query.filter_by(id=session["user_id"]).first()
+    return render_template("settings.html", user=user)
