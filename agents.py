@@ -1,5 +1,5 @@
 from openai import OpenAI
-from Models.models import Workout
+from Models.models import Workout, User
 import json
 import os
 OPENAI_KEY = os.getenv("OPENAI_KEY")
@@ -62,10 +62,12 @@ class PersonalTrainer:
         )
         return completion.choices[0].message.content
     
-    def suggest_workout(self):
-        workouts = Workout.query.all()
+    def suggest_workout(self, current_user_id):
+        workouts = Workout.query.filter_by(user_id=current_user_id).all()
+        current_user = User.query.filter_by(id=current_user_id).first()
+        user_info = f"The client is {current_user.age} years old, weighs {current_user.weight_kilograms} kilograms and is {current_user.height_centimeters} centimeters tall."
         workouts = json.dumps([workout.to_dict() for workout in workouts])
-        prompt = TRAINER_PROMPT + workouts
+        prompt = TRAINER_PROMPT + user_info + workouts
         completion = self.client.chat.completions.create(
             model="gpt-4o-mini",
             temperature=0,

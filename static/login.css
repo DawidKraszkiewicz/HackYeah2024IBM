@@ -8,17 +8,12 @@
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
 }
 
 /* Struktura kontenera */
-.container {
-    display: flex;                 /* Umożliwia użycie flexbox */
-    flex-direction: column;       /* Ustawia kierunek na kolumnowy (jeden pod drugim) */
+.container {    /* Ustawia kierunek na kolumnowy (jeden pod drugim) */
     justify-content: center;      /* Wyśrodkowuje w pionie */
     align-items: center;
     height: 100%;
@@ -52,6 +47,11 @@ h1, h2 {
 .input-group {
     margin-bottom: 20px;
     text-align: left;
+}
+
+.login-message {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 label {

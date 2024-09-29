@@ -8,9 +8,11 @@
 </head>
 
 <body>
+    <div class="login-message">
     {% for mesg in get_flashed_messages() %}
         <h1>{{ mesg }}</h1>
     {% endfor %}
+    </div>
     <div class="container">
         <div><a href="home" class="btn-back">Powrót do strony głównej</a></div>
         <div class="login-card">

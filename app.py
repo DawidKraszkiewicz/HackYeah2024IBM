@@ -15,12 +15,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 with app.app_context():
-    db.drop_all()
+    #db.drop_all()
     db.create_all()
 
 @app.route('/')
 def index():
-    session["logged_in"] = True
     session["user_id"] = None
     session["suggestion"] = None
     return redirect(url_for('home'))
@@ -39,7 +38,6 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password_hash, password):
-                session["logged_in"] = True
                 session["user_id"] = user.id
                 flash('Logged in successfully!', category='success')
                 return redirect(url_for('dashboard'))
@@ -63,12 +61,17 @@ def register():
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
+        age = request.form['age']
+        weight_kilograms = request.form['weight_kilograms']
+        height_centimeters = request.form['height_centimeters']
         
         user = User.query.filter_by(email=email).first()
         if user:
             flash('Email already exists.', category='error')
         else:
-            new_user = User(first_name=first_name, last_name=last_name, email=email, password_hash=generate_password_hash(password, method='scrypt'))
+            new_user = User(first_name=first_name, last_name=last_name, email=email, 
+                            password_hash=generate_password_hash(password, method='scrypt'),
+                            age=age, weight_kilograms=weight_kilograms, height_centimeters=height_centimeters)
             db.session.add(new_user)
             db.session.commit()
             flash('Account created successfully!', category='success')
@@ -79,51 +82,70 @@ def register():
 
 @app.route('/logout')
 def logout():
-    session["logged_in"] = False
-    session["user_id"] = None
+    session.clear()
     return redirect(url_for('home'))
 
 
 @app.route('/dashboard')
 def dashboard():
-    if "logged_in" not in session:
+    if not session.get("user_id", None):
         return redirect(url_for('home'))
     user = User.query.filter_by(id=session["user_id"]).first()
     return render_template("dashboard.html", suggestion = session["suggestion"],
                             user=user)
 
 
+@app.route('/save_config', methods=['POST'])
+def save_config():
+    if not session.get("user_id", None):
+        return redirect(url_for('home'))
+    try:
+        user = User.query.filter_by(id=session["user_id"]).first()
+    except Exception as e:
+        flash('Error updating user configuration: {}'.format(str(e)), category='error')
+        return redirect(url_for('dashboard'))
+    user.age = request.form['input_age']
+    user.weight_kilograms = request.form['input_weight']
+    user.height_centimeters = request.form['input_height']
+    db.session.commit()
+    flash('User configuration updated successfully!', category='success')
+    return redirect(url_for('dashboard'))
+
+
 @app.route('/process_workout', methods=['POST'])
 def process_workout():
-    if "logged_in" not in session:
+    if not session.get("user_id", None):
         return redirect(url_for('home'))
     text = request.form['input_workout']
     trainer = PersonalTrainer()
-    result = trainer.workout_to_json(text)
-    result = json.loads(result)["exercises"]
-    
+    try:
+        result = trainer.workout_to_json(text)
+        result = json.loads(result)["exercises"]
+    except Exception as e:
+        flash('Error processing workout: {}'.format(str(e)), category='error')
+        return redirect(url_for('dashboard'))
 
     if "error" in result:
         flash('Error processing workout. Please try again.', category='error')
         return redirect(url_for('dashboard'))
     else:
         for exercise in result:
-            new_workout = Workout(exercise_name=exercise["exercise_name"], 
+            new_workout = Workout(user_id=session["user_id"],
+                                exercise_name=exercise["exercise_name"], 
                                 weight_kilograms=exercise["weight_kilograms"],
                                 repetitions=exercise["repetitions"], 
                                 sets=exercise["sets"], 
                                 distance_kilometers=exercise["distance_kilometers"],
-                                    duration_minutes=exercise["duration_minutes"], 
-                                    kilocalories_burned=exercise["kilocalories_burned"])
+                                duration_minutes=exercise["duration_minutes"], 
+                                kilocalories_burned=exercise["kilocalories_burned"])
             db.session.add(new_workout)
             db.session.commit()
         flash('Workout processed successfully!', category='success')
         
     if isinstance(result, (dict, list)):
         result = json.dumps(result)
-        print(type(result))
 
-    suggestion = trainer.suggest_workout()
+    suggestion = trainer.suggest_workout(session["user_id"])
 
     session["suggestion"] = suggestion
     return redirect(url_for('dashboard'))
@@ -131,9 +153,17 @@ def process_workout():
 
 @app.route('/history')
 def history():
-    if "logged_in" not in session:
+    if not session.get("user_id", None):
         return redirect(url_for('home'))
     
-    workouts = Workout.query.all()
+    workouts = Workout.query.filter_by(user_id=session["user_id"]).all()
     
     return render_template("history.html", workouts=workouts)
+
+
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if not session.get("user_id", None):
+        return redirect(url_for('home'))
+    user = User.query.filter_by(id=session["user_id"]).first()
+    return render_template("settings.html", user=user)
