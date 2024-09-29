@@ -25,34 +25,23 @@
 {% endfor %}
 </div>
 <div class="content">
-    <section id="form">
-        <h2>Dane użytkownika</h2>
-        <form class="form-grid">
-            <div class="form-item">
-              <label for="weight">Waga (kg):</label>
-              <input type="number" id="weight" name="weight" required>
-            </div>
-            <div class="form-item">
-              <label for="height">Wzrost (cm):</label>
-              <input type="number" id="height" name="height" required>
-            </div>
-            <div class="form-item">
-              <label for="age">Wiek (lata):</label>
-              <input type="number" id="age" name="age" required>
-            </div>
-            <div class="form-item">
-              <label for="intensity">Intensywność treningu:</label>
-              <select id="intensity" name="intensity" required>
-                <option value="low">Niska</option>
-                <option value="medium">Średnia</option>
-                <option value="high">Wysoka</option>
-              </select>
-            </div>
-            <div class="form-submit">
-              <button type="submit">Wyślij</button>
-            </div>
-          </form>
-         
+    <section id="credentials">
+        <h2>Twoje dane</h2>
+        <p>Imię: {{ user.first_name }}</p>
+        <p>Nazwisko: {{ user.last_name }}</p>
+        <p>Email: {{ user.email }}</p>
+    </section>
+    <section id="settings">
+        <h2>Ustawienia</h2>
+        <form method="post" action="update_settings">
+            <label for="input_weight">Waga (kg):</label>
+            <input type="number" id="input_weight" name="input_weight" value="{{ user.weight_kilograms }}"><br><br>
+            <label for="input_height">Wzrost (cm):</label>
+            <input type="number" id="input_height" name="input_height" value="{{ user.height_centimeters }}"><br><br>
+            <label for="input_age">Wiek:</label>
+            <input type="number" id="input_age" name="input_age" value="{{ user.age }}"><br><br>
+            <label for="input_intensity">Intensywność treningu:</label>
+            <input type="text" id="input_intensity" name="input_intensity" value="Średnia"><br><br>
     </section>
     <section id="formularz">
         <h2>Formularz Ćwiczeń</h2>

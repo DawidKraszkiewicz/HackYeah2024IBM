@@ -62,8 +62,8 @@ class PersonalTrainer:
         )
         return completion.choices[0].message.content
     
-    def suggest_workout(self):
-        workouts = Workout.query.all()
+    def suggest_workout(self, current_user_id):
+        workouts = Workout.query.filter_by(user_id=current_user_id).all()        
         workouts = json.dumps([workout.to_dict() for workout in workouts])
         prompt = TRAINER_PROMPT + workouts
         completion = self.client.chat.completions.create(
