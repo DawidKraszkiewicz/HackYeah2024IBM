@@ -19,7 +19,7 @@ Return answer as a JSON format summary of the exercises in the workout structure
 -"kilocalories_burned" <number>
 
 Even when there is only 1 exercise, make sure to include an "exercises" field.
-Exercise names should be translated to english and CamelCase.
+Exercise names should be translated to polish and CamelCase.
 Make sure the exercise names are standarised.
 Calculate any missing values based on the source text.
 Do any necessary conversions to metric units.
@@ -42,6 +42,7 @@ Based on the data, suggest the next workout for the client. It should be challen
 -"duration_minutes" <number>
 -"kilocalories_burned" <number>
 
+Output should be translated to polish. 
 Do not infer any data based on previous training, strictly use only source text given below as input.
 =====
 '''
